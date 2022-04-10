@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>投票页面</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/SpringMVCLearn/ui/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    <link href="/SpringMVCLearn/static/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<script type="text/javascript">
+    $(window).load(function () {
+        $.ajax({
+            url: "/SpringMVCLearn/vote/getOptionInfo",
+            type: "post",
+            data: {},
+            contentType: "application/json",
+            error: function () {
+                alert("活动信息加载失败")
+            },
+            success: function (data) {
+                var data = JSON.parse(data);
+                console.log(data)
+                var activityName = data.activityName;
+                var desc = data.desc;
+                var optionArray = data.options;
+                $("#activityName").html(activityName)
+                $("#desc").html(desc)
+                str = "";
+                //设置选项信息
+                for (var i = 0; i < optionArray.length; i++) {
+                    str += "<div class='radio form-control'><label>" +
+                        "<input type='radio' name='optionsRadios' id='optionsRadios2' value='" +
+                        optionArray[i].optionName +"'>"+optionArray[i].optionName+
+                        "</label> </div>";
+                }
+                $("#makeChoice").html(str)
+            }
+        })
+    })
+
+
+</script>
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="/SpringMVCLearn/findActivityNameServlet">投票页面<span
+                        class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+        <!--            投票页面  单选框把信息发到Servlet-->
+        <form id="optionBlock" role="form" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"
+              action="/SpringMVCLearn/vote/sendInfo" method="post">
+            <div class="form-group">
+                <h2 class="page-header">活动信息</h2>
+                <h3>活动名</h3>
+                <p id="activityName">xxx</p>
+                <h3>活动描述</h3>
+                <p id="desc">xxx</p>
+            </div>
+
+            <div class="form-group" id="makeChoice" name="makeChoice">
+                <h2 class="page-header">选项信息</h2>
+<!--                <div class="radio form-control">-->
+<!--                    <label>-->
+<!--                        <input type="radio" name="optionsRadios" id="optionsRadios1" checked> 选项 1-->
+<!--                    </label>-->
+<!--                </div>-->
+<!--                <div class="radio form-control">-->
+<!--                    <label>-->
+<!--                        <input type="radio" name="optionsRadios" id="optionsRadios2">选项 3-->
+<!--                    </label>-->
+<!--                </div>-->
+
+            </div>
+            <button type="submit" class="btn btn-lg btn-success btn-block" name="submitBtn" id="submitBtn">投票</button>
+            <button type="submit" class="btn btn-lg btn-warning btn-block"><a href="/SpringMVCLearn/static/JudgeActivityView.html" style="color: #8a6d3b"></a> 放弃投票</button>
+            <!--            <script type="text/javascript">-->
+            <!--                $("#submitBtn").click(function(){-->
+            <!--                    var value = $('input:radio:checked').value();-->
+            <!--                    alert(value);-->
+            <!--                })-->
+            <!--                $.ajax({-->
+            <!--                    url: "/SpringMVCLearn/vote/sendInfo",-->
+            <!--                    type: "post",-->
+            <!--                    data: {"optionName":value},-->
+            <!--                    contentType: "application/json",-->
+            <!--                    error: function () {-->
+            <!--                        alert("投票信息发送失败")-->
+            <!--                    },-->
+            <!--                    success: function (data) {-->
+            <!--                       alert("投票信息发送成功")-->
+            <!--                    }-->
+            <!--                })-->
+            <!--            </script>-->
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

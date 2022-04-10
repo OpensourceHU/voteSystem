@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>我的活动</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/SpringMVCLearn/ui/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    <link href="/SpringMVCLearn/static/dashboard.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+    $(window).load(function () {
+        //   alert("发送请求")
+        //   var xmlHttpRequest = new XMLHttpRequest();
+        //   xmlHttpRequest.open("GET", "/SpringMVCLearn/findActivityInfoServlet", true);
+        //   xmlHttpRequest.onreadystatechange = function () {
+        //       if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+        //         var responseText = xmlHttpRequest.responseText;
+        //         alert(responseText)
+        //       }
+        //   }
+        // xmlHttpRequest.send()
+        $.ajax(
+            {
+                url: "/SpringMVCLearn/findNameandDescServlet",
+                type: "post",
+                data: {},
+                contentType: "application/json",
+                error: function () {
+                    alert("更新页面失败")
+                },
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        str += "<tr><td>" + i +
+                            "</td><td><a href='/SpringMVCLearn/static/adminActivityView.html?activityName="+data[i].name+"'>" +
+                                data[i].name +
+                            "</a></td><td>" + data[i].desc +
+                            "</td><tr>"
+                    }
+                    $("#ActivityInfo").html(str)
+                }
+            }
+        )
+    })
+</script>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/SpringMVCLearn/static/forgetPassword.html">修改密码</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="/SpringMVCLearn/static/myActivityOri.html">我的活动 <span class="sr-only">(current)</span></a>
+                </li>
+                <li><a href="/SpringMVCLearn/static/activity_create.jsp">创建活动</a></li>
+                <li><a href="#">活动详情</a></li>
+            </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Dashboard</h1>
+
+
+            <h2 class="sub-header">Section title</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ActivityName</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ActivityInfo" name="ActivityInfo">
+                    <tr>
+                        <td><a href="/SpringMVCLearn/static/myActivityOri.html?activityName=">活动名字</a></td>
+                        <td>描述</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-warning" onclick="showDelete()">我要删除活动</button>
+            <br>
+            <div style="visibility:hidden" id="displayBlock" name="displayBlock">
+                <h5 class="sub-header">为防手滑 请手动输入要删除的活动名称</h5>
+                <label>
+                    <input type="text" class="form-control" id="deleteActivityName" name="deleteActivityName"
+                           placeholder="要删除的活动名称">
+                </label>
+                <button class="btn btn-danger" onclick="deleteActivity()">确定删除</button>
+            </div>
+            <script type="text/javascript">
+                function showDelete() {
+                    var block = document.getElementById("displayBlock");
+                    block.style.visibility = "visible";
+                }
+
+                function deleteActivity() {
+                    var deleteActivityName = document.getElementById("deleteActivityName").value;
+                    alert("即将删除的活动名为  " + deleteActivityName)
+                    $.ajax({
+                        url: "/SpringMVCLearn/deleteActivityServlet",
+                        type: "get",
+                        data: {"deleteActivityName": deleteActivityName},
+                        contentType: "application/json",
+                        success: function () {
+                            alert("活动删除成功")
+                        },
+                        error: function () {
+                            alert("删除失败,请检查活动名输入是否正确")
+                        }
+                    })
+                }
+
+
+            </script>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+
+<script>window.jQuery || document.write('<script src="/SpringMVCLearn/ui/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="/SpringMVCLearn/ui/js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/SpringMVCLearn/ui/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

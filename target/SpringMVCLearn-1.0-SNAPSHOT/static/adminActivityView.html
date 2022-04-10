@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="refresh" content="10">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <title>活动详情</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/SpringMVCLearn/ui/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/SpringMVCLearn/ui/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/SpringMVCLearn/static/dashboard.css" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>adminActivityView</title>
+    <title>活动详情</title>
+    <script type="text/javascript">
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+    </script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            var sum = 0;
+            var name = getQueryVariable("activityName");
+            $.ajax({
+                url: "/SpringMVCLearn/findActivityInfo4Admin",
+                type: "get",
+                data: {"activityName":name},
+                dataType:"json",
+                contentType: "json/application",
+                success: function (data) {
+                    dataObj = data;
+                    var activityName = dataObj.activityName;
+                    var desc = dataObj.desc;
+                    var judgesCount = dataObj.judges.length;
+                    var optionsCount = dataObj.options.length;
+
+                    //设置描述
+                    str = "";
+                    str += "<h2 class='sub-header'>活动名</h2>" + "<p class='lead'>" + activityName + "</p>";
+                    str += "<h2 class='sub-header'>描述</h2>" + "<p class='lead'>" + desc + "</p>";
+
+                    str += "<div class='table-responsive'>";
+                    for (var i = 0; i < optionsCount; i++) {
+                        sum += parseInt(dataObj.options[i].optionCount);
+                    }
+                    console.log("sum:" + sum);
+
+                    //设置选项信息
+                    str+="<h2 class='sub-header'>选项信息</h2>";
+                    for (var i = 0; i < optionsCount; i++) {
+                        var cur = parseInt(dataObj.options[i].optionCount);
+                        str += "<h5>" + "选项名:" + dataObj.options[i].optionName + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp个数: " + dataObj.options[i].optionCount + "</h5>" +
+                            "<div name='oneOptionInfo' id='oneOptionInfo' class='progress' style='visibility: visible'><label>" +
+                            (cur / sum * 100).toFixed(2) + "%</label>" +
+                            "<div class='progress-bar' role='progressbar' aria-valuenow='60'" +
+                            "aria-valuemin='0' aria-valuemax='100' style='width: " + (cur / sum) * 100 + "%;'> </div></div>"
+                    }
+                    str += "</div>";
+
+
+                    //设置评委信息
+                    str += "<h2 class='sub-header'>评委信息</h2>" +
+                        "            <table class='table table-striped'>" +
+                        "                <thead>" +
+                        "                <tr>" +
+                        "                    <th>Account</th>" +
+                        "                    <th>Password</th>" +
+                        "                    <th>delete</th>" +
+                        "                </tr>" +
+                        "                </thead>" +
+                        "                <tbody>" +
+                        "                <tr>"
+
+                    for (var i = 0; i < judgesCount; i++) {
+                        str += "<td>" +dataObj.judges[i].judgeAccount +"</td> <td>" +dataObj.judges[i].judgePassword +
+                            "</td> <td><button type='button' class='button btn btn-warning'>"+
+                            "<a style='color: #8a6d3b' href='/SpringMVCLearn/deleteJudge?judgeName="+dataObj.judges[i].judgeAccount+"& ="+activityName+"'>"+
+                                "删除该评委"+"</a></button></td>";
+                    }
+                    str+="</tr></tbody></table>";
+                    $("#show").html(str)
+                },
+                error: function () {
+                    alert("更新页面失败")
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/SpringMVCLearn/static/forgetPassword.html">修改密码</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/SpringMVCLearn/static/myActivityOri.html">我的活动 </a></li>
+                <li><a href="/SpringMVCLearn/static/activity_create.jsp">创建活动 </a></li>
+                <li class="active"><a href="#">活动详情 <span class="sr-only">(current)</span> </a></li>
+            </ul>
+
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="show" name="show">
+        </div>
+
+
+    </div>
+
+
+</div>
+</body>
+</html>
