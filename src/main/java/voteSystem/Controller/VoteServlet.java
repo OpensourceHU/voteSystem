@@ -4,21 +4,15 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import voteSystem.Dao.ActivityDAO;
 import voteSystem.Dao.ActivityDAOImple;
 import voteSystem.Service.ActivityService;
 import voteSystem.pojo.ActivityPojo;
-import voteSystem.pojo.NameAndDesc;
-import voteSystem.pojo.Option;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 /**
  * @author OpensourceHU
@@ -74,10 +68,8 @@ public class VoteServlet {
     public void ShowInfo4Judge(HttpServletResponse response,HttpServletRequest request) throws IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/text;charset=UTF-8");//返回的是txt文本文件
-        System.out.println("这里是showInfo4Judge  Servlet");
         String activityName = (String) request.getSession().getAttribute("activityName");
         String info = activityService.findOptionInfo(activityName);
-        System.out.println(info);
         response.getWriter().write(info);
         response.getWriter().close();
     }

@@ -1,14 +1,9 @@
 package voteSystem.Controller;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.http.converter.json.JsonbHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import voteSystem.Service.ActivityService;
 import voteSystem.Service.UserService;
 import voteSystem.pojo.*;
@@ -21,7 +16,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * @author OpensourceHU

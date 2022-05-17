@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 /**
  * @author OpensourceHU
  * @version V1.0
- * @Description jedis连接池
+ * @Description jedis连接池  单例模式
  * @date 2020/7/19 0019 15:53
  */
 @Component

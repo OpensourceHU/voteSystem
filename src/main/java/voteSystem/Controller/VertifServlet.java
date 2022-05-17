@@ -1,6 +1,5 @@
 package voteSystem.Controller;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -69,6 +68,7 @@ public class VertifServlet extends HttpServlet {
         ImageIO.write(bfi, "JPG", response.getOutputStream());  //写到输出流
     }
 
+    //随机返回一个颜色
     private static Color interLine(int Low, int High){
         if(Low > 255)
             Low = 255;
